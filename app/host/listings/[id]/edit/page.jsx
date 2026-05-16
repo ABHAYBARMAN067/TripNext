@@ -3,8 +3,8 @@
 import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import toast from 'react-hot-toast';
-import Button from '../../../../../components/ui/Button.jsx';
-import Input from '../../../../../components/ui/Input.jsx';
+import Button from '../../../../../components/ui/Button';
+import Input from '../../../../../components/ui/Input';
 
 export default function EditListingPage() {
     const router = useRouter();
