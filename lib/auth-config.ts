@@ -17,55 +17,72 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) {
+        try {
+          if (!credentials?.email || !credentials?.password) {
+            return null;
+          }
+
+          await dbConnect();
+
+          const user = await User.findOne({ email: credentials.email });
+
+          if (!user) {
+            return null;
+          }
+
+          const isPasswordValid = await bcrypt.compare(credentials.password as string, user.password);
+
+          if (!isPasswordValid) {
+            return null;
+          }
+
+          return {
+            id: user._id.toString(),
+            email: user.email,
+            name: user.name,
+            role: user.role,
+          };
+        } catch (error) {
+          console.error('Auth authorize error:', error);
           return null;
         }
-
-        await dbConnect();
-
-        const user = await User.findOne({ email: credentials.email });
-
-        if (!user) {
-          return null;
-        }
-
-        const isPasswordValid = await bcrypt.compare(credentials.password as string, user.password);
-
-        if (!isPasswordValid) {
-          return null;
-        }
-
-        return {
-          id: user._id.toString(),
-          email: user.email,
-          name: user.name,
-          role: user.role,
-        };
       },
     }),
   ],
   session: {
     strategy: 'jwt',
+    maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   callbacks: {
     async jwt({ token, user }) {
-      if (user) {
-        (token as any).role = (user as any).role;
-        token.sub = user.id;
+      try {
+        if (user) {
+          (token as any).role = (user as any).role;
+          token.sub = user.id;
+        }
+        return token;
+      } catch (error) {
+        console.error('JWT callback error:', error);
+        return token;
       }
-      return token;
     },
     async session({ session, token }) {
-      if (token && session.user) {
-        (session.user as any).id = token.sub as string;
-        (session.user as any).role = (token as any).role || 'guest';
+      try {
+        if (token && session.user) {
+          (session.user as any).id = token.sub as string;
+          (session.user as any).role = (token as any).role || 'guest';
+        }
+        return session;
+      } catch (error) {
+        console.error('Session callback error:', error);
+        return session;
       }
-      return session;
     },
   },
   pages: {
     signIn: '/login',
   },
+  debug: process.env.NODE_ENV === 'development',
 });
 
 

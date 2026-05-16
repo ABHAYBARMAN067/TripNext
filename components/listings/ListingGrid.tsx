@@ -56,6 +56,13 @@ export default function ListingGrid({ showFilters = false, listings: initialList
             const res = await fetch(`/api/listings?${params}`);
             const data = await res.json();
 
+            if (!res.ok || !data.listings) {
+                console.error('Invalid response from API:', data);
+                setListings(append ? listings : []);
+                setHasMore(false);
+                return;
+            }
+
             if (append) {
                 setListings(prev => [...prev, ...data.listings]);
             } else {
@@ -65,6 +72,8 @@ export default function ListingGrid({ showFilters = false, listings: initialList
             setHasMore(data.listings.length === 12);
         } catch (error) {
             console.error('Error fetching listings:', error);
+            setListings(append ? listings : []);
+            setHasMore(false);
         } finally {
             setLoading(false);
         }
