@@ -1,4 +1,4 @@
-import NextAuth from 'next-auth';
+import { getServerSession } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { MongoDBAdapter } from '@auth/mongodb-adapter';
 import dbConnect from './db';
@@ -6,8 +6,7 @@ import clientPromise from './mongodb';
 import bcrypt from 'bcryptjs';
 import User from '../models/User';
 
-export const { handlers, auth, signIn, signOut } = NextAuth({
-  // Use the official MongoDB client for the Auth.js adapter
+export const authOptions = {
   adapter: MongoDBAdapter(clientPromise),
   providers: [
     CredentialsProvider({
@@ -83,6 +82,15 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     signIn: '/login',
   },
   debug: process.env.NODE_ENV === 'development',
-});
+};
+
+export async function auth() {
+  try {
+    return await getServerSession(authOptions as any);
+  } catch (error) {
+    console.error('getServerSession error:', error);
+    return null;
+  }
+}
 
 
