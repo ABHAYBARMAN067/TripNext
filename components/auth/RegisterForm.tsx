@@ -1,7 +1,6 @@
-"use client";
+'use client';
 
-import { useState, useRef, useEffect } from 'react';
-import type { ChangeEvent, FormEvent } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import Button from '../ui/Button';
@@ -9,37 +8,36 @@ import Input from '../ui/Input';
 import Link from 'next/link';
 
 export default function RegisterForm() {
-    const [step, setStep] = useState<'register' | 'verify'>('register');
-    type FormState = { name: string; email: string; password: string; role: 'guest' | 'host' };
-    const [formData, setFormData] = useState<FormState>({
+    const [step, setStep] = useState('register'); // 'register' or 'verify'
+    const [formData, setFormData] = useState({
         name: '',
         email: '',
         password: '',
         role: 'guest',
     });
-    const [otpData, setOtpData] = useState<{ otp: string }>({
+    const [otpData, setOtpData] = useState({
         otp: '',
     });
     const [loading, setLoading] = useState(false);
     const [resendLoading, setResendLoading] = useState(false);
-    const [countdown, setCountdown] = useState<number>(0);
-    const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+    const [countdown, setCountdown] = useState(0);
     const router = useRouter();
 
-    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-        const { name, value, type, checked } = e.target;
-        setFormData((prev) => ({
-            ...prev,
-            [name]: type === 'checkbox' ? (checked as any) : value,
-        }));
+    const handleChange = (e) => {
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value,
+        });
     };
 
-    const handleOtpChange = (e: ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setOtpData((prev) => ({ ...prev, [name]: value }));
+    const handleOtpChange = (e) => {
+        setOtpData({
+            ...otpData,
+            [e.target.name]: e.target.value,
+        });
     };
 
-    const handleRegister = async (e: FormEvent<HTMLFormElement>) => {
+    const handleRegister = async (e) => {
         e.preventDefault();
         setLoading(true);
 
@@ -68,7 +66,7 @@ export default function RegisterForm() {
         }
     };
 
-    const handleVerifyOTP = async (e: FormEvent<HTMLFormElement>) => {
+    const handleVerifyOTP = async (e) => {
         e.preventDefault();
         setLoading(true);
 
@@ -127,34 +125,18 @@ export default function RegisterForm() {
         }
     };
 
-    const startCountdown = (seconds = 60) => {
-        setCountdown(seconds);
-        if (timerRef.current) {
-            clearInterval(timerRef.current);
-            timerRef.current = null;
-        }
-        timerRef.current = setInterval(() => {
+    const startCountdown = () => {
+        setCountdown(60);
+        const timer = setInterval(() => {
             setCountdown((prev) => {
                 if (prev <= 1) {
-                    if (timerRef.current) {
-                        clearInterval(timerRef.current);
-                        timerRef.current = null;
-                    }
+                    clearInterval(timer);
                     return 0;
                 }
                 return prev - 1;
             });
         }, 1000);
     };
-
-    useEffect(() => {
-        return () => {
-            if (timerRef.current) {
-                clearInterval(timerRef.current);
-                timerRef.current = null;
-            }
-        };
-    }, []);
 
     if (step === 'verify') {
         return (
@@ -179,7 +161,7 @@ export default function RegisterForm() {
                     onChange={handleOtpChange}
                     required
                     placeholder="Enter 6-digit code"
-                    maxLength={6}
+                    maxLength="6"
                     className="text-center text-2xl tracking-widest"
                 />
 
@@ -250,7 +232,7 @@ export default function RegisterForm() {
                 onChange={handleChange}
                 required
                 placeholder="Enter your password"
-                minLength={6}
+                minLength="6"
             />
 
             <div className="mb-4">

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Plus, Calendar, Star, Home } from 'lucide-react';
+import { Plus, Calendar, DollarSign, Star, Home } from 'lucide-react';
 import Button from '../ui/Button';
 
 interface Booking {
@@ -97,7 +97,7 @@ export default function HostDashboard() {
 
                 <div className="bg-white rounded-lg shadow p-6">
                     <div className="flex items-center">
-                        <span className="inline-flex items-center justify-center h-8 w-8 rounded-full bg-yellow-100 text-yellow-600 text-lg font-semibold">₹</span>
+                        <DollarSign className="h-8 w-8 text-yellow-600" />
                         <div className="ml-4">
                             <p className="text-sm font-medium text-gray-600">Total Revenue</p>
                             <p className="text-2xl font-bold text-gray-900">₹{stats.totalRevenue}</p>

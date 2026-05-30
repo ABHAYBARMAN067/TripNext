@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import ListingDetail from '../../../components/listings/ListingDetail.jsx';
+import ListingDetail from '../../../components/listings/ListingDetail';
 
 async function getListing(id) {
     try {

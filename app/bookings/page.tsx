@@ -1,4 +1,4 @@
-import BookingList from '../../components/bookings/BookingList.jsx';
+import BookingList from '../../components/bookings/BookingList';
 
 export default function GuestBookingsPage() {
     return (

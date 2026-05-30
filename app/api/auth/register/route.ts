@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 export const runtime = "nodejs";
 
 import { NextResponse } from 'next/server';
@@ -40,7 +41,7 @@ export async function POST(request) {
             return NextResponse.json({ error: 'Database query failed' }, { status: 500 });
         }
 
-        if (existingUser && existingUser.emailVerified) {
+        if (existingUser?.emailVerified) {
             return NextResponse.json(
                 { error: 'User already exists with this email' },
                 { status: 400 }

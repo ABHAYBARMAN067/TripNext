@@ -1,5 +1,3 @@
-"use client";
-
 import { InputHTMLAttributes } from 'react';
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
@@ -38,7 +36,6 @@ export default function Input({
                 onChange={onChange}
                 required={required}
                 disabled={disabled}
-                suppressHydrationWarning
                 className={inputClasses}
                 {...props}
             />

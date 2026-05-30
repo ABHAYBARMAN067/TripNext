@@ -1,8 +1,9 @@
 import { Inter } from "next/font/google";
+import { Suspense } from "react";
 import "./globals.css";
-import { Toaster } from 'react-hot-toast';
-import SessionProviderWrapper from '../components/SessionProviderWrapper';
-import NavBar from '../components/ui/NavBar';
+import { Toaster } from "react-hot-toast";
+import NavBar from "../components/ui/NavBar";
+import SessionProviderWrapper from "../components/SessionProviderWrapper";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,7 +17,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body className={inter.className}>
         <SessionProviderWrapper>
-          <NavBar />
+          <Suspense fallback={null}>
+            <NavBar />
+          </Suspense>
           {children}
         </SessionProviderWrapper>
         <Toaster position="top-right" />

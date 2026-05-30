@@ -13,13 +13,16 @@ A full-stack, Airbnb-inspired travel listing platform built with **Next.js 16**,
 ![JWT](https://img.shields.io/badge/JWT-Authentication-red?style=for-the-badge&logo=json-web-tokens)
 ![NextAuth](https://img.shields.io/badge/NextAuth.js-Authentication-blue?style=for-the-badge)
 ![Nodemailer](https://img.shields.io/badge/Nodemailer-Email_Service-yellow?style=for-the-badge)
+![Redux](https://img.shields.io/badge/Redux-Toolkit-764ABC?style=for-the-badge&logo=redux)
+
 ![Cloudinary](https://img.shields.io/badge/Cloudinary-Image_Upload-3448C5?style=for-the-badge&logo=cloudinary)
 ![Leaflet](https://img.shields.io/badge/Leaflet-Maps-199900?style=for-the-badge&logo=leaflet)
 ![OpenStreetMap](https://img.shields.io/badge/OpenStreetMap-Nominatim-7EBC6F?style=for-the-badge&logo=openstreetmap)
 ![Axios](https://img.shields.io/badge/Axios-HTTP_Client-5A29E4?style=for-the-badge&logo=axios)
 ![bcrypt](https://img.shields.io/badge/bcrypt-Password_Hashing-lightgrey?style=for-the-badge)
 ![Vercel](https://img.shields.io/badge/Deploy-Vercel-black?style=for-the-badge&logo=vercel)
-
+![Docker](https://img.shields.io/badge/Docker-Containerization-2496ED?style=for-the-badge&logo=docker)
+![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-CI/CD-2088FF?style=for-the-badge&logo=github-actions)
 
 # Tech Stack
 
@@ -28,6 +31,7 @@ A full-stack, Airbnb-inspired travel listing platform built with **Next.js 16**,
 - **React 19** - UI library
 - **TypeScript** - Type-safe JavaScript
 - **TailwindCSS 4** - Utility-first CSS framework
+- **Redux Toolkit** - Global state management
 - **Lucide React** - Icon library
 
 ### Backend
@@ -48,15 +52,20 @@ A full-stack, Airbnb-inspired travel listing platform built with **Next.js 16**,
 - **Nodemailer** - Email service
 - **Leaflet** - Interactive maps
 - **React Leaflet** - React components for Leaflet
+- **OpenStreetMap Nominatim** - Geocoding and location search
 - **Axios** - HTTP client
 - **React Hot Toast** - Toast notifications
+
+### DevOps & Deployment
+- **Docker** - Containerization
+- **Docker Compose** - Multi-container setup
+- **GitHub Actions** - CI/CD automation
+- **Vercel** - Deployment platform
 
 ### Development Tools
 - **Biome** - Linter and formatter
 - **TypeScript** - Type checking
 - **PostCSS** - CSS processing
-
-
 
 
 # TypeScript Migration

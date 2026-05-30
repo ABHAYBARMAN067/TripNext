@@ -1,15 +1,23 @@
-import { NextResponse, NextRequest } from 'next/server';
-import { clearAuthCookie } from '../../../../lib/auth';
+export const dynamic = "force-dynamic";
 
-export async function POST(request: NextRequest) {
-    try {
-        const response = NextResponse.json({ message: 'Logged out successfully' });
+import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
+import { clearAuthCookie } from "../../../../lib/auth";
 
-        clearAuthCookie();
 
-        return response;
-    } catch (error) {
-        console.error('Logout error:', error);
-        return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
-    }
+export async function POST(_request: NextRequest) {
+  try {
+    const response = NextResponse.json({ message: "Logged out successfully" });
+
+    clearAuthCookie();
+
+    return response;
+  } catch (error) {
+    console.error("Logout error:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 },
+    );
+  }
 }
+

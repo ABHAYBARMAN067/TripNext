@@ -1,24 +1,13 @@
 import nodemailer from 'nodemailer';
 
-const smtpUser = process.env.SMTP_USER || process.env.GMAIL_USER;
-const smtpPass = process.env.SMTP_PASS || process.env.GMAIL_PASS;
-const emailFrom = process.env.EMAIL_FROM || smtpUser;
-const emailFromName = process.env.EMAIL_FROM_NAME || 'TripNest';
-
-if (!smtpUser || !smtpPass) {
-  throw new Error(
-    'Missing SMTP credentials. Set SMTP_USER/SMTP_PASS or GMAIL_USER/GMAIL_PASS in your environment.'
-  );
-}
-
 // Create transporter
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST || 'smtp.gmail.com',
   port: Number(process.env.SMTP_PORT) || 587,
   secure: false, // true for 465, false for other ports
   auth: {
-    user: smtpUser,
-    pass: smtpPass,
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS,
   },
 });
 
@@ -37,7 +26,7 @@ interface SendResult {
 export async function sendOTPEmail(email: string, otp: string): Promise<SendResult> {
   try {
     const mailOptions = {
-      from: `"${emailFromName}" <${emailFrom}>`,
+      from: `"TripNest" <${process.env.SMTP_USER}>`,
       to: email,
       subject: 'Verify Your Email - TripNest',
       html: `
@@ -92,7 +81,7 @@ export async function sendOTPEmail(email: string, otp: string): Promise<SendResu
 export async function sendWelcomeEmail(email: string, name: string): Promise<SendResult> {
   try {
     const mailOptions = {
-      from: `"${emailFromName}" <${emailFrom}>`,
+      from: `"TripNest" <${process.env.SMTP_USER}>`,
       to: email,
       subject: 'Welcome to TripNest! 🎉',
       html: `

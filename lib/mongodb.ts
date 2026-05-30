@@ -1,20 +1,8 @@
-import dns from 'dns';
 import { MongoClient, type MongoClientOptions } from 'mongodb';
 
 // Support both env variable names for convenience
 const uri = process.env.MONGODB_URI || process.env.MONGO_URI;
 const options: MongoClientOptions = {};
-
-// In development, override DNS servers to avoid local DNS/SRV resolver issues
-if (process.env.NODE_ENV === 'development') {
-  try {
-    dns.setServers(['8.8.8.8', '1.1.1.1']);
-  } catch (err) {
-    // non-fatal — continue with default resolver
-    // eslint-disable-next-line no-console
-    console.warn('dns.setServers failed:', err);
-  }
-}
 
 let client: MongoClient | undefined;
 let clientPromise: Promise<MongoClient>;
