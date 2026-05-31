@@ -1,64 +1,77 @@
-export const dynamic = 'force-dynamic';
-import { NextResponse, NextRequest } from 'next/server';
-import dbConnect from '../../../../lib/db';
-import Booking from '../../../../models/Booking';
-import { requireAuth } from '../../../../lib/roles';
+export const dynamic = "force-dynamic";
 
-export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-    try {
-        await dbConnect();
+import { type NextRequest, NextResponse } from "next/server";
+import dbConnect from "../../../../lib/db";
+import { requireAuth } from "../../../../lib/roles";
+import Booking from "../../../../models/Booking";
 
-        const user = await requireAuth();
-        const { id } = await params;
+export async function PUT(
+	request: NextRequest,
+	{ params }: { params: Promise<{ id: string }> },
+) {
+	try {
+		await dbConnect();
 
-        const booking = await Booking.findById(id);
-        if (!booking) {
-            return NextResponse.json({ error: 'Booking not found' }, { status: 404 });
-        }
+		const user = await requireAuth();
+		const { id } = await params;
 
-        // Only guest can update their booking
-        if (booking.guest.toString() !== user.id) {
-            return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
-        }
+		const booking = await Booking.findById(id);
+		if (!booking) {
+			return NextResponse.json({ error: "Booking not found" }, { status: 404 });
+		}
 
-        const { status } = await request.json();
+		// Only guest can update their booking
+		if (booking.guest.toString() !== user.id) {
+			return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+		}
 
-        if (!['confirmed', 'cancelled'].includes(status)) {
-            return NextResponse.json({ error: 'Invalid status' }, { status: 400 });
-        }
+		const { status } = await request.json();
 
-        booking.status = status;
-        await booking.save();
+		if (!["confirmed", "cancelled"].includes(status)) {
+			return NextResponse.json({ error: "Invalid status" }, { status: 400 });
+		}
 
-        return NextResponse.json(booking);
-    } catch (error) {
-        console.error('Update booking error:', error);
-        return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
-    }
+		booking.status = status;
+		await booking.save();
+
+		return NextResponse.json(booking);
+	} catch (error) {
+		console.error("Update booking error:", error);
+		return NextResponse.json(
+			{ error: "Internal server error" },
+			{ status: 500 },
+		);
+	}
 }
 
-export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-    try {
-        await dbConnect();
+export async function DELETE(
+	_request: NextRequest,
+	{ params }: { params: Promise<{ id: string }> },
+) {
+	try {
+		await dbConnect();
 
-        const user = await requireAuth();
-        const { id } = await params;
+		const user = await requireAuth();
+		const { id } = await params;
 
-        const booking = await Booking.findById(id);
-        if (!booking) {
-            return NextResponse.json({ error: 'Booking not found' }, { status: 404 });
-        }
+		const booking = await Booking.findById(id);
+		if (!booking) {
+			return NextResponse.json({ error: "Booking not found" }, { status: 404 });
+		}
 
-        // Only guest can delete their booking
-        if (booking.guest.toString() !== user.id) {
-            return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
-        }
+		// Only guest can delete their booking
+		if (booking.guest.toString() !== user.id) {
+			return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+		}
 
-        await Booking.findByIdAndDelete(id);
+		await Booking.findByIdAndDelete(id);
 
-        return NextResponse.json({ message: 'Booking cancelled successfully' });
-    } catch (error) {
-        console.error('Delete booking error:', error);
-        return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
-    }
+		return NextResponse.json({ message: "Booking cancelled successfully" });
+	} catch (error) {
+		console.error("Delete booking error:", error);
+		return NextResponse.json(
+			{ error: "Internal server error" },
+			{ status: 500 },
+		);
+	}
 }

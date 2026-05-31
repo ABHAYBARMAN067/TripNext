@@ -1,35 +1,38 @@
-import nodemailer from 'nodemailer';
+import nodemailer from "nodemailer";
 
 // Create transporter
 const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST || 'smtp.gmail.com',
-  port: Number(process.env.SMTP_PORT) || 587,
-  secure: false, // true for 465, false for other ports
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
-  },
+	host: process.env.SMTP_HOST || "smtp.gmail.com",
+	port: Number(process.env.SMTP_PORT) || 587,
+	secure: false, // true for 465, false for other ports
+	auth: {
+		user: process.env.SMTP_USER,
+		pass: process.env.SMTP_PASS,
+	},
 });
 
 // Generate OTP
 export function generateOTP(): string {
-  return Math.floor(100000 + Math.random() * 900000).toString();
+	return Math.floor(100000 + Math.random() * 900000).toString();
 }
 
 interface SendResult {
-  success: boolean;
-  messageId?: string;
-  error?: string;
+	success: boolean;
+	messageId?: string;
+	error?: string;
 }
 
 // Send OTP email
-export async function sendOTPEmail(email: string, otp: string): Promise<SendResult> {
-  try {
-    const mailOptions = {
-      from: `"TripNest" <${process.env.SMTP_USER}>`,
-      to: email,
-      subject: 'Verify Your Email - TripNest',
-      html: `
+export async function sendOTPEmail(
+	email: string,
+	otp: string,
+): Promise<SendResult> {
+	try {
+		const mailOptions = {
+			from: `"TripNest" <${process.env.SMTP_USER}>`,
+			to: email,
+			subject: "Verify Your Email - TripNest",
+			html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
           <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; border-radius: 10px; text-align: center; margin-bottom: 30px;">
             <h1 style="color: white; margin: 0; font-size: 28px;">🏠 TripNest</h1>
@@ -63,28 +66,31 @@ export async function sendOTPEmail(email: string, otp: string): Promise<SendResu
           </div>
         </div>
       `,
-    };
+		};
 
-    const info = await transporter.sendMail(mailOptions);
-    // eslint-disable-next-line no-console
-    console.log('OTP email sent:', info.messageId);
-    return { success: true, messageId: info.messageId as string };
-  } catch (error) {
-    const err = error as Error;
-    // eslint-disable-next-line no-console
-    console.error('Error sending OTP email:', err);
-    return { success: false, error: err.message };
-  }
+		const info = await transporter.sendMail(mailOptions);
+		// eslint-disable-next-line no-console
+		console.log("OTP email sent:", info.messageId);
+		return { success: true, messageId: info.messageId as string };
+	} catch (error) {
+		const err = error as Error;
+		// eslint-disable-next-line no-console
+		console.error("Error sending OTP email:", err);
+		return { success: false, error: err.message };
+	}
 }
 
 // Send welcome email after verification
-export async function sendWelcomeEmail(email: string, name: string): Promise<SendResult> {
-  try {
-    const mailOptions = {
-      from: `"TripNest" <${process.env.SMTP_USER}>`,
-      to: email,
-      subject: 'Welcome to TripNest! 🎉',
-      html: `
+export async function sendWelcomeEmail(
+	email: string,
+	name: string,
+): Promise<SendResult> {
+	try {
+		const mailOptions = {
+			from: `"TripNest" <${process.env.SMTP_USER}>`,
+			to: email,
+			subject: "Welcome to TripNest! 🎉",
+			html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
           <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; border-radius: 10px; text-align: center; margin-bottom: 30px;">
             <h1 style="color: white; margin: 0; font-size: 28px;">🏠 Welcome to TripNest!</h1>
@@ -107,7 +113,7 @@ export async function sendWelcomeEmail(email: string, name: string): Promise<Sen
             </div>
 
             <div style="text-align: center; margin: 30px 0;">
-              <a href="${process.env.NEXTAUTH_URL || 'http://localhost:3000'}"
+              <a href="${process.env.NEXTAUTH_URL || "http://localhost:3000"}"
                  style="background: #667eea; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; display: inline-block;">
                 Start Exploring
               </a>
@@ -120,18 +126,16 @@ export async function sendWelcomeEmail(email: string, name: string): Promise<Sen
           </div>
         </div>
       `,
-    };
+		};
 
-    const info = await transporter.sendMail(mailOptions);
-    // eslint-disable-next-line no-console
-    console.log('Welcome email sent:', info.messageId);
-    return { success: true, messageId: info.messageId as string };
-  } catch (error) {
-    const err = error as Error;
-    // eslint-disable-next-line no-console
-    console.error('Error sending welcome email:', err);
-    return { success: false, error: err.message };
-  }
+		const info = await transporter.sendMail(mailOptions);
+		// eslint-disable-next-line no-console
+		console.log("Welcome email sent:", info.messageId);
+		return { success: true, messageId: info.messageId as string };
+	} catch (error) {
+		const err = error as Error;
+		// eslint-disable-next-line no-console
+		console.error("Error sending welcome email:", err);
+		return { success: false, error: err.message };
+	}
 }
-
-

@@ -1,10 +1,21 @@
-export const dynamic = "force-dynamic";
-import NextAuth from "next-auth";
-import { authOptions } from "../../../../lib/auth-config";
+// NextAuth route is deprecated - using custom JWT authentication
+// This file is kept for backwards compatibility but is no longer used
+// See /app/api/auth/login for authentication
 
-export const runtime = "nodejs";
+export async function GET() {
+	return new Response(
+		"NextAuth is not configured. Use /api/auth/login instead.",
+		{
+			status: 405,
+		},
+	);
+}
 
-const handler = NextAuth(authOptions);
-
-export { handler as GET, handler as POST };
-
+export async function POST() {
+	return new Response(
+		"NextAuth is not configured. Use /api/auth/login instead.",
+		{
+			status: 405,
+		},
+	);
+}
