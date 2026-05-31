@@ -28,11 +28,11 @@ export default function ReviewCard({ review }) {
 							{review.author.name}
 						</h4>
 						<div className="flex items-center">
-							{[...Array(5)].map((_, i) => (
+							{[1, 2, 3, 4, 5].map((star) => (
 								<Star
-									key={i}
+									key={star}
 									className={`h-4 w-4 ${
-										i < review.rating
+										star <= review.rating
 											? "text-yellow-400 fill-current"
 											: "text-gray-300"
 									}`}

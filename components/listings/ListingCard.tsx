@@ -1,6 +1,6 @@
 import { MapPin, Star, Users } from "lucide-react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 interface Listing {
 	_id: string;
@@ -21,29 +21,26 @@ interface Listing {
 }
 
 export default function ListingCard({ listing }: { listing: Listing }) {
-	const router = useRouter();
 	const imageUrl = listing.images?.[0]?.url || "/vercel.svg";
 
-	const handleClick = async () => {
-		// Track recently viewed
-		try {
-			await fetch("/api/user/recently-viewed", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({ listingId: listing._id }),
-			});
-		} catch (error) {
+	const trackRecentlyViewed = () => {
+		fetch("/api/user/recently-viewed", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({ listingId: listing._id }),
+		}).catch((error) => {
 			console.error("Error tracking recently viewed:", error);
-		}
-
-		// Navigate to listing page
-		router.push(`/listings/${listing._id}`);
+		});
 	};
 
 	return (
-		<div onClick={handleClick} className="block cursor-pointer">
+		<Link
+			href={`/listings/${listing._id}`}
+			onClick={trackRecentlyViewed}
+			className="block cursor-pointer"
+		>
 			<div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
 				<div className="relative h-48">
 					<Image
@@ -86,6 +83,6 @@ export default function ListingCard({ listing }: { listing: Listing }) {
 					</div>
 				</div>
 			</div>
-		</div>
+		</Link>
 	);
 }

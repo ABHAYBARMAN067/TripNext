@@ -38,10 +38,12 @@ export default function Modal({
 		<div className="fixed inset-0 z-50 overflow-y-auto">
 			<div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
 				<div className="fixed inset-0 transition-opacity" aria-hidden="true">
-					<div
+					<button
+						type="button"
 						className="absolute inset-0 bg-gray-500 opacity-75"
 						onClick={onClose}
-					></div>
+						aria-label="Close modal"
+					/>
 				</div>
 
 				<div
@@ -54,14 +56,17 @@ export default function Modal({
 									{title}
 								</h3>
 								<button
+									type="button"
 									onClick={onClose}
 									className="text-gray-400 hover:text-gray-600"
+									aria-label="Close"
 								>
 									<svg
 										className="h-6 w-6"
 										fill="none"
 										viewBox="0 0 24 24"
 										stroke="currentColor"
+										aria-hidden="true"
 									>
 										<path
 											strokeLinecap="round"

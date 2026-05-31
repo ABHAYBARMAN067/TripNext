@@ -49,3 +49,5 @@ jobs:
 
       - name: Docker build
         run: docker build -t tripnest:${{ github.sha }} .
+        env:
+          DOCKER_BUILDKIT: 1

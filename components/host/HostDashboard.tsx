@@ -25,31 +25,31 @@ export default function HostDashboard() {
 	const [recentBookings, setRecentBookings] = useState<Booking[]>([]);
 	const [loading, setLoading] = useState<boolean>(true);
 
-	const fetchDashboardData = async () => {
-		try {
-			const [statsRes, bookingsRes] = await Promise.all([
-				fetch("/api/host/stats"),
-				fetch("/api/host/bookings?limit=5"),
-			]);
-
-			if (statsRes.ok) {
-				const statsData = await statsRes.json();
-				setStats(statsData);
-			}
-
-			if (bookingsRes.ok) {
-				const bookingsData = await bookingsRes.json();
-				setRecentBookings(bookingsData);
-			}
-		} catch (error) {
-			console.error("Failed to fetch dashboard data:", error);
-		} finally {
-			setLoading(false);
-		}
-	};
-
 	useEffect(() => {
-		fetchDashboardData();
+		async function loadDashboardData() {
+			try {
+				const [statsRes, bookingsRes] = await Promise.all([
+					fetch("/api/host/stats"),
+					fetch("/api/host/bookings?limit=5"),
+				]);
+
+				if (statsRes.ok) {
+					const statsData = await statsRes.json();
+					setStats(statsData);
+				}
+
+				if (bookingsRes.ok) {
+					const bookingsData = await bookingsRes.json();
+					setRecentBookings(bookingsData);
+				}
+			} catch (error) {
+				console.error("Failed to fetch dashboard data:", error);
+			} finally {
+				setLoading(false);
+			}
+		}
+
+		loadDashboardData();
 	}, []);
 
 	if (loading) {

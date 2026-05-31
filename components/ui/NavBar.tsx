@@ -14,12 +14,15 @@ interface User {
 }
 
 // Debounce utility function
-function debounce<T extends (...args: any[]) => any>(func: T, wait: number): T {
+function debounce<T extends (...args: never[]) => void>(
+	func: T,
+	wait: number,
+): (...args: Parameters<T>) => void {
 	let timeout: ReturnType<typeof setTimeout>;
-	return ((...args: Parameters<T>) => {
+	return (...args: Parameters<T>) => {
 		clearTimeout(timeout);
 		timeout = setTimeout(() => func(...args), wait);
-	}) as T;
+	};
 }
 
 export default function NavBar() {
@@ -130,6 +133,7 @@ export default function NavBar() {
 							viewBox="0 0 120 32"
 							fill="none"
 							xmlns="http://www.w3.org/2000/svg"
+							aria-hidden="true"
 						>
 							<text
 								x="0"
@@ -167,6 +171,7 @@ export default function NavBar() {
 									fill="none"
 									stroke="currentColor"
 									viewBox="0 0 24 24"
+									aria-hidden="true"
 								>
 									<path
 										strokeLinecap="round"
@@ -208,6 +213,7 @@ export default function NavBar() {
 									Welcome, {user?.name}
 								</span>
 								<button
+									type="button"
 									onClick={handleLogout}
 									className="text-gray-700 hover:text-blue-600 transition-colors font-medium px-3 py-2 rounded-md hover:bg-blue-50 cursor-pointer"
 								>
@@ -227,6 +233,7 @@ export default function NavBar() {
 					{/* Mobile Menu Button */}
 					<div className="md:hidden">
 						<button
+							type="button"
 							onClick={toggleMobileMenu}
 							className="text-gray-700 hover:text-blue-600 p-2 cursor-pointer"
 							suppressHydrationWarning
@@ -236,6 +243,7 @@ export default function NavBar() {
 								fill="none"
 								stroke="currentColor"
 								viewBox="0 0 24 24"
+								aria-hidden="true"
 							>
 								{isMobileMenuOpen ? (
 									<path
@@ -287,6 +295,7 @@ export default function NavBar() {
 										fill="none"
 										stroke="currentColor"
 										viewBox="0 0 24 24"
+										aria-hidden="true"
 									>
 										<path
 											strokeLinecap="round"
@@ -332,6 +341,7 @@ export default function NavBar() {
 									Welcome, {user?.name}
 								</div>
 								<button
+									type="button"
 									onClick={() => {
 										handleLogout();
 										closeMobileMenu();

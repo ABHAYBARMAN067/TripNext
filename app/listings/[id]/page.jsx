@@ -1,6 +1,8 @@
 import { notFound } from "next/navigation";
 import ListingDetail from "../../../components/listings/ListingDetail";
 
+export const dynamic = "force-dynamic";
+
 async function getListing(id) {
 	try {
 		const res = await fetch(
@@ -21,7 +23,8 @@ async function getListing(id) {
 }
 
 export default async function ListingPage({ params }) {
-	const { id } = await params;
+	const { id } = params;
+
 	const listing = await getListing(id);
 
 	if (!listing) {

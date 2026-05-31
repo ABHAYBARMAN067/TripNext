@@ -2,6 +2,7 @@
 
 export const dynamic = "force-dynamic";
 
+import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
@@ -31,13 +32,16 @@ export default function EditListingPage() {
 	});
 
 	useEffect(() => {
-		fetchListing();
-	}, [fetchListing]);
+		async function fetchListing() {
+			try {
+				const res = await fetch(`/api/listings/${listingId}`);
+				if (!res.ok) {
+					setError(
+						"Failed to load listing. It may not exist or you do not have permission to edit it.",
+					);
+					return;
+				}
 
-	const fetchListing = async () => {
-		try {
-			const res = await fetch(`/api/listings/${listingId}`);
-			if (res.ok) {
 				const listing = await res.json();
 				setFormData({
 					title: listing.title,
@@ -49,17 +53,15 @@ export default function EditListingPage() {
 				});
 				setImages(listing.images || []);
 				setError(null);
-			} else {
-				setError(
-					"Failed to load listing. It may not exist or you do not have permission to edit it.",
-				);
+			} catch (_error) {
+				setError("An error occurred while loading the listing.");
+			} finally {
+				setFetchLoading(false);
 			}
-		} catch (_error) {
-			setError("An error occurred while loading the listing.");
-		} finally {
-			setFetchLoading(false);
 		}
-	};
+
+		fetchListing();
+	}, [listingId]);
 
 	const handleChange = (e) => {
 		const { name, value } = e.target;
@@ -68,17 +70,21 @@ export default function EditListingPage() {
 				...prev,
 				location: { ...prev.location, address: value },
 			}));
-		} else if (name === "price" || name === "maxGuests") {
+			return;
+		}
+
+		if (name === "price" || name === "maxGuests") {
 			setFormData((prev) => ({
 				...prev,
 				[name]: parseInt(value, 10) || "",
 			}));
-		} else {
-			setFormData((prev) => ({
-				...prev,
-				[name]: value,
-			}));
+			return;
 		}
+
+		setFormData((prev) => ({
+			...prev,
+			[name]: value,
+		}));
 	};
 
 	const handleAmenityChange = (amenity) => {
@@ -108,9 +114,10 @@ export default function EditListingPage() {
 					},
 				}));
 				toast.success("Location found!");
-			} else {
-				toast.error("Could not find location");
+				return;
 			}
+
+			toast.error("Could not find location");
 		} catch (_error) {
 			toast.error("Geocoding failed");
 		}
@@ -123,12 +130,10 @@ export default function EditListingPage() {
 		setUploading(true);
 		try {
 			const uploadPromises = files.map(async (file) => {
-				// Validate file type
 				if (!file.type.startsWith("image/")) {
 					throw new Error(`${file.name} is not an image file`);
 				}
 
-				// Validate file size (max 10MB)
 				const maxSize = 10 * 1024 * 1024; // 10MB
 				if (file.size > maxSize) {
 					throw new Error(`${file.name} is too large. Maximum size is 10MB`);
@@ -143,11 +148,10 @@ export default function EditListingPage() {
 				});
 
 				const data = await res.json();
-				if (res.ok) {
-					return data;
-				} else {
+				if (!res.ok) {
 					throw new Error(data.error || "Upload failed");
 				}
+				return data;
 			});
 
 			const uploadedImages = await Promise.all(uploadPromises);
@@ -191,9 +195,10 @@ export default function EditListingPage() {
 			if (res.ok) {
 				toast.success("Listing updated successfully!");
 				router.push("/host/listings");
-			} else {
-				toast.error(data.error || "Failed to update listing");
+				return;
 			}
+
+			toast.error(data.error || "Failed to update listing");
 		} catch (_error) {
 			toast.error("An error occurred");
 		} finally {
@@ -204,7 +209,7 @@ export default function EditListingPage() {
 	if (fetchLoading) {
 		return (
 			<div className="flex justify-center items-center h-64">
-				<div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+				<div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600" />
 			</div>
 		);
 	}
@@ -215,11 +220,14 @@ export default function EditListingPage() {
 				<div className="max-w-md mx-auto bg-white rounded-lg shadow p-8 text-center">
 					<div className="text-red-500 mb-4">
 						<svg
+							role="img"
+							aria-label="Error icon"
 							className="h-16 w-16 mx-auto"
 							fill="none"
 							viewBox="0 0 24 24"
 							stroke="currentColor"
 						>
+							<title>Error icon</title>
 							<path
 								strokeLinecap="round"
 								strokeLinejoin="round"
@@ -381,10 +389,12 @@ export default function EditListingPage() {
 						{images.length > 0 && (
 							<div className="grid grid-cols-2 md:grid-cols-4 gap-4">
 								{images.map((image, index) => (
-									<div key={index} className="relative">
-										<img
+									<div key={image.publicId || image.url} className="relative">
+										<Image
 											src={image.url}
 											alt={`Upload ${index + 1}`}
+											width={400}
+											height={300}
 											className="w-full h-24 object-cover rounded-lg"
 										/>
 										<button

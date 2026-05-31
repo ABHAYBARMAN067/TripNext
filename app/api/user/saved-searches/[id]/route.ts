@@ -15,8 +15,12 @@ export async function DELETE(
 		const { id } = await params;
 
 		const userDoc = await User.findById(user.id);
+		if (!userDoc) {
+			return NextResponse.json({ error: "User not found" }, { status: 404 });
+		}
+
 		userDoc.savedSearches = userDoc.savedSearches.filter(
-			(search: any) => search._id?.toString() !== id,
+			(search) => search._id?.toString() !== id,
 		);
 		await userDoc.save();
 

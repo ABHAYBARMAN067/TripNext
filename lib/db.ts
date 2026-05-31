@@ -17,7 +17,7 @@ async function dbConnect(): Promise<typeof mongoose> {
 		return mongoose;
 	}
 
-	return mongoose.connect(MONGO_URI!, {
+	return mongoose.connect(MONGO_URI, {
 		bufferCommands: false,
 	});
 }

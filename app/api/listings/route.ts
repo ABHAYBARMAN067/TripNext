@@ -25,7 +25,27 @@ export async function GET(request) {
 		const lng = parseFloat(searchParams.get("lng"));
 		const radius = parseFloat(searchParams.get("radius")) || 50; // default 50km
 
-		const query: any = {
+		type ListingQuery = {
+			price: { $gte: number; $lte: number };
+			$or?: Array<
+				| { title: { $regex: string; $options: "i" } }
+				| { description: { $regex: string; $options: "i" } }
+				| { "location.address": { $regex: string; $options: "i" } }
+			>;
+			amenities?: { $all: string[] };
+			instantBook?: boolean;
+			location?: {
+				$near: {
+					$geometry: {
+						type: "Point";
+						coordinates: [number, number];
+					};
+					$maxDistance: number;
+				};
+			};
+		};
+
+		const query: ListingQuery = {
 			price: { $gte: minPrice, $lte: maxPrice },
 		};
 

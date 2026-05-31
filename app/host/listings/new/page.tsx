@@ -2,13 +2,12 @@
 
 export const dynamic = "force-dynamic";
 
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import Button from "../../../../components/ui/Button";
 import Input from "../../../../components/ui/Input";
-
-type UploadedImage = { url: string; public_id?: string };
 
 export default function NewListingPage() {
 	const router = useRouter();
@@ -310,12 +309,15 @@ export default function NewListingPage() {
 						{images.length > 0 && (
 							<div className="grid grid-cols-2 md:grid-cols-4 gap-4">
 								{images.map((image, index) => (
-									<div key={index} className="relative">
-										<img
+									<div key={image.public_id ?? image.url} className="relative">
+										<Image
 											src={image.url}
 											alt={`Upload ${index + 1}`}
+											width={400}
+											height={96}
 											className="w-full h-24 object-cover rounded-lg"
 										/>
+
 										<button
 											type="button"
 											onClick={() => removeImage(index)}

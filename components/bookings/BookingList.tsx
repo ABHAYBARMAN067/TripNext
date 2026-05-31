@@ -26,22 +26,22 @@ export default function BookingList() {
 	const [bookings, setBookings] = useState<Booking[]>([]);
 	const [loading, setLoading] = useState<boolean>(true);
 
-	const fetchBookings = async () => {
-		try {
-			const res = await fetch("/api/bookings");
-			if (res.ok) {
-				const data = await res.json();
-				setBookings(data);
-			}
-		} catch (error) {
-			console.error("Failed to fetch bookings:", error);
-		} finally {
-			setLoading(false);
-		}
-	};
-
 	useEffect(() => {
-		fetchBookings();
+		async function loadBookings() {
+			try {
+				const res = await fetch("/api/bookings");
+				if (res.ok) {
+					const data = await res.json();
+					setBookings(data);
+				}
+			} catch (error) {
+				console.error("Failed to fetch bookings:", error);
+			} finally {
+				setLoading(false);
+			}
+		}
+
+		loadBookings();
 	}, []);
 
 	const cancelBooking = async (bookingId: string) => {

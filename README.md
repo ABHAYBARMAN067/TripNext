@@ -532,6 +532,6 @@ tripnest/
 
 ## License
 
-**Proprietary Software** © 2025  ( https://github.com/ABHAYBARMAN067/TripNest-With-TypeScript )  All rights reserved.
+**Proprietary Software** © 2025  ( https://github.com/ABHAYBARMAN067/TripNext )  All rights reserved.
 
 **Happy coding! ** Built with Next.js, MongoDB, and modern web technologies.

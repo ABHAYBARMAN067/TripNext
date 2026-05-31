@@ -10,7 +10,7 @@ import Button from "../ui/Button";
 import Modal from "../ui/Modal";
 
 // Dynamic import to avoid SSR issues with Leaflet
-const Map = dynamic(() => import("../maps/Map"), {
+const ListingMap = dynamic(() => import("../maps/Map"), {
 	ssr: false,
 	loading: () => (
 		<div className="h-64 bg-gray-100 flex items-center justify-center rounded-lg">
@@ -93,28 +93,15 @@ export default function ListingDetail({ listing }) {
 						<>
 							<div className="relative h-96 mb-4 bg-gray-200 rounded-lg overflow-hidden">
 								{!imageError && imageUrl !== "/vercel.svg" ? (
-									<>
-										<Image
-											src={imageUrl}
-											alt={listing.title}
-											fill
-											className="object-cover rounded-lg"
-											unoptimized
-											onError={handleImageError}
-											priority
-										/>
-										{/* Fallback using regular img tag */}
-										<img
-											src={imageUrl}
-											alt={listing.title}
-											className="object-cover rounded-lg w-full h-full hidden"
-											onError={(e) => {
-												console.error("Regular img tag also failed");
-												handleImageError(e);
-												(e.target as HTMLElement).style.display = "none";
-											}}
-										/>
-									</>
+									<Image
+										src={imageUrl}
+										alt={listing.title}
+										fill
+										className="object-cover rounded-lg"
+										unoptimized
+										onError={handleImageError}
+										priority
+									/>
 								) : (
 									<div className="w-full h-full flex items-center justify-center bg-gray-200">
 										<div className="text-center">
@@ -137,7 +124,8 @@ export default function ListingDetail({ listing }) {
 											"/vercel.svg";
 										return (
 											<button
-												key={index}
+												type="button"
+												key={imgUrl}
 												onClick={() => {
 													setSelectedImage(index);
 													setImageError(false);
@@ -218,9 +206,9 @@ export default function ListingDetail({ listing }) {
 								<div className="mt-6">
 									<h3 className="text-xl font-semibold mb-2">Amenities</h3>
 									<div className="flex flex-wrap gap-2">
-										{listing.amenities.map((amenity, index) => (
+										{listing.amenities.map((amenity) => (
 											<span
-												key={index}
+												key={amenity}
 												className="bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-sm"
 											>
 												{amenity}
@@ -234,7 +222,7 @@ export default function ListingDetail({ listing }) {
 						{/* Map */}
 						<div className="bg-white rounded-lg shadow p-6 mb-6">
 							<h3 className="text-xl font-semibold mb-4">Location</h3>
-							<Map
+							<ListingMap
 								center={[
 									listing.location.coordinates[1],
 									listing.location.coordinates[0],

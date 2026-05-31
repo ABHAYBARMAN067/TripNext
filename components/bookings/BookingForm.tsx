@@ -94,10 +94,14 @@ export default function BookingForm({ listing, onClose }) {
 				/>
 
 				<div>
-					<label className="block text-sm font-medium text-gray-700 mb-2">
+					<label
+						htmlFor="booking-guests"
+						className="block text-sm font-medium text-gray-700 mb-2"
+					>
 						Number of Guests
 					</label>
 					<select
+						id="booking-guests"
 						name="guests"
 						value={formData.guests}
 						onChange={handleChange}

@@ -148,6 +148,7 @@ export default function RegisterForm() {
 							fill="none"
 							viewBox="0 0 24 24"
 							stroke="currentColor"
+							aria-hidden="true"
 						>
 							<path
 								strokeLinecap="round"
@@ -246,10 +247,10 @@ export default function RegisterForm() {
 				minLength={6}
 			/>
 
-			<div className="mb-4">
-				<label className="block text-sm font-medium text-gray-700 mb-2">
+			<fieldset className="mb-4">
+				<legend className="block text-sm font-medium text-gray-700 mb-2">
 					Account Type
-				</label>
+				</legend>
 				<div className="flex space-x-4">
 					<label className="flex items-center">
 						<input
@@ -274,7 +275,7 @@ export default function RegisterForm() {
 						Host
 					</label>
 				</div>
-			</div>
+			</fieldset>
 
 			<Button type="submit" loading={loading} className="w-full">
 				Create Account

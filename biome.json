@@ -8,5 +8,21 @@
 	"files": {
 		"ignoreUnknown": true,
 		"includes": ["**", "!node_modules", "!.next", "!out", "!build", "!coverage"]
+	},
+	"linter": {
+		"rules": {
+			"suspicious": {
+				"noUnknownAtRules": {
+					"options": {
+						"ignore": ["tailwind"]
+					}
+				}
+			}
+		}
+	},
+	"css": {
+		"parser": {
+			"tailwindDirectives": true
+		}
 	}
 }

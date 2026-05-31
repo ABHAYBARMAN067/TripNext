@@ -14,36 +14,41 @@ interface Listing {
 	location: { address: string };
 	price: number;
 	isActive: boolean;
-	bookings?: any[];
+	bookings?: { _id: string }[];
 	averageRating?: number;
+}
+
+interface DeleteModalState {
+	isOpen: boolean;
+	listing: Listing | null;
 }
 
 export default function HostListings() {
 	const [listings, setListings] = useState<Listing[]>([]);
 	const [loading, setLoading] = useState<boolean>(true);
-	const [deleteModal, setDeleteModal] = useState({
+
+	const [deleteModal, setDeleteModal] = useState<DeleteModalState>({
 		isOpen: false,
-		listing: null as Listing | null,
+		listing: null,
 	});
 
 	useEffect(() => {
-		fetchListings();
-	}, [fetchListings]);
-
-	const fetchListings = async () => {
-		try {
-			const res = await fetch("/api/host/listings");
-			if (res.ok) {
-				const data = await res.json();
-				setListings(data);
+		async function loadListings() {
+			try {
+				const res = await fetch("/api/host/listings");
+				if (res.ok) {
+					const data = await res.json();
+					setListings(data);
+				}
+			} catch (error) {
+				console.error("Failed to fetch listings:", error);
+			} finally {
+				setLoading(false);
 			}
-		} catch (error) {
-			console.error("Failed to fetch listings:", error);
-		} finally {
-			setLoading(false);
 		}
-	};
 
+		loadListings();
+	}, []);
 	const handleDelete = async (listingId: string) => {
 		try {
 			const res = await fetch(`/api/listings/${listingId}`, {
@@ -63,10 +68,11 @@ export default function HostListings() {
 		}
 	};
 
+	// ✅ LOADING STATE (correct placement)
 	if (loading) {
 		return (
 			<div className="flex justify-center items-center h-64">
-				<div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+				<div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600" />
 			</div>
 		);
 	}
@@ -76,6 +82,7 @@ export default function HostListings() {
 			{/* Header */}
 			<div className="flex items-center justify-between">
 				<h1 className="text-3xl font-bold text-gray-900">My Listings</h1>
+
 				<Link href="/host/listings/new">
 					<Button>
 						<Plus className="h-4 w-4 mr-2" />
@@ -84,18 +91,17 @@ export default function HostListings() {
 				</Link>
 			</div>
 
-			{/* Listings Grid */}
+			{/* Empty State */}
 			{listings.length === 0 ? (
 				<div className="text-center py-12">
-					<div className="text-gray-400 mb-4">
-						<Plus className="h-16 w-16 mx-auto" />
-					</div>
+					<Plus className="h-16 w-16 mx-auto text-gray-400 mb-4" />
 					<h3 className="text-lg font-medium text-gray-900 mb-2">
 						No listings yet
 					</h3>
 					<p className="text-gray-600 mb-6">
 						Create your first listing to start earning
 					</p>
+
 					<Link href="/host/listings/new">
 						<Button>Create Listing</Button>
 					</Link>
@@ -116,6 +122,7 @@ export default function HostListings() {
 									className="object-cover"
 									unoptimized
 								/>
+
 								<div className="absolute top-2 right-2">
 									<span
 										className={`px-2 py-1 text-xs rounded-full ${
@@ -134,16 +141,18 @@ export default function HostListings() {
 								<h3 className="font-semibold text-lg text-gray-900 mb-2">
 									{listing.title}
 								</h3>
+
 								<p className="text-gray-600 text-sm mb-2">
-									{listing.location.address}
+									{listing.location?.address}
 								</p>
+
 								<p className="text-gray-900 font-medium">
 									₹{listing.price} / night
 								</p>
 
-								{/* Stats */}
 								<div className="flex items-center justify-between mt-3 text-sm text-gray-600">
 									<span>{listing.bookings?.length || 0} bookings</span>
+
 									<div className="flex items-center">
 										<span className="mr-1">★</span>
 										<span>{listing.averageRating || "New"}</span>
@@ -159,6 +168,7 @@ export default function HostListings() {
 										View
 									</Button>
 								</Link>
+
 								<Link
 									href={`/host/listings/${listing._id}/edit`}
 									className="flex-1"
@@ -168,10 +178,16 @@ export default function HostListings() {
 										Edit
 									</Button>
 								</Link>
+
 								<Button
 									variant="outline"
 									size="sm"
-									onClick={() => setDeleteModal({ isOpen: true, listing })}
+									onClick={() =>
+										setDeleteModal({
+											isOpen: true,
+											listing: listing,
+										})
+									}
 									className="text-red-600 hover:text-red-700"
 								>
 									<Trash2 className="h-4 w-4" />
@@ -182,7 +198,7 @@ export default function HostListings() {
 				</div>
 			)}
 
-			{/* Delete Confirmation Modal */}
+			{/* Delete Modal */}
 			<Modal
 				isOpen={deleteModal.isOpen}
 				onClose={() => setDeleteModal({ isOpen: false, listing: null })}
@@ -190,9 +206,11 @@ export default function HostListings() {
 			>
 				<div className="p-6">
 					<p className="text-gray-700 mb-6">
-						Are you sure you want to delete "{deleteModal.listing?.title}"? This
-						action cannot be undone.
+						Are you sure you want to delete{" "}
+						<strong>{deleteModal.listing?.title}</strong>? This action cannot be
+						undone.
 					</p>
+
 					<div className="flex gap-3">
 						<Button
 							variant="secondary"
@@ -201,8 +219,13 @@ export default function HostListings() {
 						>
 							Cancel
 						</Button>
+
 						<Button
-							onClick={() => handleDelete(deleteModal.listing._id)}
+							onClick={() => {
+								if (deleteModal.listing?._id) {
+									handleDelete(deleteModal.listing._id);
+								}
+							}}
 							className="flex-1 bg-red-600 hover:bg-red-700"
 						>
 							Delete

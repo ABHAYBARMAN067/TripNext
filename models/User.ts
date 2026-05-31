@@ -15,6 +15,7 @@ interface SavedSearchFilters {
 }
 
 interface SavedSearch {
+	_id?: mongoose.Types.ObjectId;
 	name: string;
 	filters: SavedSearchFilters;
 	createdAt: Date;

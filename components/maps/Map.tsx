@@ -14,7 +14,9 @@ interface MapProps {
 	height?: string;
 }
 
-export default function Map({
+type LeafletModule = typeof import("react-leaflet");
+
+export default function LeafletMap({
 	center,
 	markers = [],
 	zoom = 13,
@@ -22,7 +24,9 @@ export default function Map({
 	height = "400px",
 }: MapProps) {
 	const [isMounted, setIsMounted] = useState(false);
-	const [MapComponents, setMapComponents] = useState<any>(null);
+	const [MapComponents, setMapComponents] = useState<LeafletModule | null>(
+		null,
+	);
 
 	useEffect(() => {
 		// Only run on client side
@@ -35,7 +39,11 @@ export default function Map({
 			import("leaflet/dist/leaflet.css"),
 		]).then(([reactLeaflet, L]) => {
 			// Fix Leaflet default marker icon issue
-			delete (L.Icon.Default.prototype as any)._getIconUrl;
+			const iconPrototype = L.Icon.Default.prototype as unknown as Record<
+				string,
+				unknown
+			>;
+			delete iconPrototype._getIconUrl;
 			L.Icon.Default.mergeOptions({
 				iconRetinaUrl:
 					"https://unpkg.com/leaflet@1.9.5/dist/images/marker-icon-2x.png",
@@ -76,8 +84,11 @@ export default function Map({
 					attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 				/>
 				{markers.length > 0 ? (
-					markers.map((marker, index) => (
-						<Marker key={index} position={marker.position as LatLngExpression}>
+					markers.map((marker) => (
+						<Marker
+							key={`${marker.position[0]}-${marker.position[1]}-${marker.popup ?? ""}`}
+							position={marker.position as LatLngExpression}
+						>
 							{marker.popup && <Popup>{marker.popup}</Popup>}
 						</Marker>
 					))

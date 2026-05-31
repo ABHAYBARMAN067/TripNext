@@ -85,7 +85,15 @@ export async function POST(request) {
 				.end(buffer);
 		});
 
-		const uploadResult = result as any;
+		type CloudinaryUploadResult = {
+			secure_url: string;
+			public_id?: string;
+		};
+
+		const uploadResult: CloudinaryUploadResult | null =
+			result && typeof result === "object" && "secure_url" in result
+				? (result as CloudinaryUploadResult)
+				: null;
 
 		if (!uploadResult?.secure_url) {
 			return NextResponse.json(

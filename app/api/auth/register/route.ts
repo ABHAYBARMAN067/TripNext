@@ -4,7 +4,7 @@ export const runtime = "nodejs";
 import { NextResponse } from "next/server";
 import dbConnect from "../../../../lib/db";
 import { generateOTP, sendOTPEmail } from "../../../../lib/email";
-import User from "../../../../models/User";
+import User, { type UserDocument } from "../../../../models/User";
 
 export async function POST(request) {
 	try {
@@ -31,7 +31,7 @@ export async function POST(request) {
 		}
 
 		console.log("Checking for existing user...");
-		let existingUser;
+		let existingUser: UserDocument | null = null;
 		try {
 			existingUser = await User.findOne({ email });
 			console.log(
@@ -67,6 +67,12 @@ export async function POST(request) {
 			existingUser.emailVerificationOTPExpires = otpExpires;
 
 			try {
+				if (!existingUser) {
+					return NextResponse.json(
+						{ error: "User no longer available" },
+						{ status: 500 },
+					);
+				}
 				await existingUser.save();
 				console.log("User updated successfully.");
 			} catch (saveError) {

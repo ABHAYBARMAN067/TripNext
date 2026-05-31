@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Button from "../ui/Button";
 import Input from "../ui/Input";
 import ListingCard from "./ListingCard";
@@ -44,36 +44,39 @@ export default function ListingGrid({
 		minRating: "",
 	});
 
-	const fetchListings = async (pageNum = 1, append = false) => {
-		try {
-			const params = new URLSearchParams({
-				page: pageNum.toString(),
-				limit: "12",
-			});
+	const fetchListings = useCallback(
+		async (pageNum = 1, append = false) => {
+			try {
+				const params = new URLSearchParams({
+					page: pageNum.toString(),
+					limit: "12",
+				});
 
-			if (filters.search) params.append("search", filters.search);
-			if (filters.minPrice) params.append("minPrice", filters.minPrice);
-			if (filters.maxPrice) params.append("maxPrice", filters.maxPrice);
-			if (filters.minRating) params.append("minRating", filters.minRating);
-			if (filters.amenities.length > 0)
-				params.append("amenities", filters.amenities.join(","));
+				if (filters.search) params.append("search", filters.search);
+				if (filters.minPrice) params.append("minPrice", filters.minPrice);
+				if (filters.maxPrice) params.append("maxPrice", filters.maxPrice);
+				if (filters.minRating) params.append("minRating", filters.minRating);
+				if (filters.amenities.length > 0)
+					params.append("amenities", filters.amenities.join(","));
 
-			const res = await fetch(`/api/listings?${params}`);
-			const data = await res.json();
+				const res = await fetch(`/api/listings?${params}`);
+				const data = await res.json();
 
-			if (append) {
-				setListings((prev) => [...prev, ...data.listings]);
-			} else {
-				setListings(data.listings);
+				if (append) {
+					setListings((prev) => [...prev, ...data.listings]);
+				} else {
+					setListings(data.listings);
+				}
+
+				setHasMore(data.listings.length === 12);
+			} catch (error) {
+				console.error("Error fetching listings:", error);
+			} finally {
+				setLoading(false);
 			}
-
-			setHasMore(data.listings.length === 12);
-		} catch (error) {
-			console.error("Error fetching listings:", error);
-		} finally {
-			setLoading(false);
-		}
-	};
+		},
+		[filters],
+	);
 
 	useEffect(() => {
 		fetchListings(1, false);
@@ -102,12 +105,23 @@ export default function ListingGrid({
 		fetchListings(nextPage, true);
 	};
 
+	const skeletonKeys = [
+		"skeleton-1",
+		"skeleton-2",
+		"skeleton-3",
+		"skeleton-4",
+		"skeleton-5",
+		"skeleton-6",
+		"skeleton-7",
+		"skeleton-8",
+	];
+
 	if (loading && listings.length === 0) {
 		return (
 			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-				{[...Array(8)].map((_, i) => (
+				{skeletonKeys.map((key) => (
 					<div
-						key={i}
+						key={key}
 						className="bg-white rounded-lg shadow-md h-64 animate-pulse"
 					></div>
 				))}
@@ -157,10 +171,10 @@ export default function ListingGrid({
 							step="0.1"
 						/>
 					</div>
-					<div className="mb-4">
-						<label className="block text-sm font-medium text-gray-700 mb-2">
+					<fieldset className="mb-4">
+						<legend className="block text-sm font-medium text-gray-700 mb-2">
 							Amenities
-						</label>
+						</legend>
 						<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2">
 							{["WiFi", "Parking", "Pool", "Gym", "Air Conditioning"].map(
 								(amenity) => (
@@ -176,7 +190,7 @@ export default function ListingGrid({
 								),
 							)}
 						</div>
-					</div>
+					</fieldset>
 				</div>
 			)}
 

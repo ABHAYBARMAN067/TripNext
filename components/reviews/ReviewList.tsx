@@ -71,10 +71,14 @@ export default function ReviewList({ listingId, reviews: initialReviews }) {
 					className="mb-6 p-4 bg-gray-50 rounded-lg"
 				>
 					<div className="mb-4">
-						<label className="block text-sm font-medium text-gray-700 mb-2">
+						<label
+							htmlFor="review-rating"
+							className="block text-sm font-medium text-gray-700 mb-2"
+						>
 							Rating
 						</label>
 						<select
+							id="review-rating"
 							name="rating"
 							value={formData.rating}
 							onChange={handleChange}
