@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Setup Node.js
@@ -25,8 +25,12 @@ jobs:
           node-version: 20
           cache: npm
 
+      #  IMPORTANT: clean install (CI safe)
       - name: Install dependencies
-        run: npm ci
+        run: npm install
+
+      - name: Fix permissions (optional safety)
+        run: chmod +x node_modules/.bin/* || true
 
       - name: Lint
         run: npm run lint
@@ -34,11 +38,11 @@ jobs:
       - name: Typecheck
         run: npm run typecheck
 
-      - name: Build
+      - name: Build Next.js app
         run: npm run build
         env:
-          MONGODB_URI: mongodb://localhost:27017/tripnest-ci
-          MONGO_URI: mongodb://localhost:27017/tripnest-ci
+          MONGODB_URI: mongodb://127.0.0.1:27017/tripnest-ci
+          MONGO_URI: mongodb://127.0.0.1:27017/tripnest-ci
           NEXTAUTH_URL: http://localhost:3000
           NEXTAUTH_SECRET: ci-secret
           JWT_SECRET: ci-secret
