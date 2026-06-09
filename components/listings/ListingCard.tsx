@@ -10,6 +10,7 @@ interface Listing {
 	location: {
 		address: string;
 		coordinates: [number, number];
+		
 	};
 	images: { url: string; publicId: string }[];
 	amenities: string[];
