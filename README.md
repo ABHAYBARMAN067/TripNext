@@ -151,6 +151,16 @@ Run `npm run typecheck` to validate types.
 - Modern, clean UI with TailwindCSS
 - Interactive components (modals, forms, galleries)
 - Toast notifications for user feedback
+- **Intuitive Navigation Bar**:
+  - **Logo** - Brand and home link
+  - **Search Bar** - Real-time destination search
+  - **Explore** - Browse all listings
+  - **Bookings** *(Logged-in only)* - View your reservations
+  - **Wishlist** *(Logged-in only)* - Manage your favorites
+  - **Become a Host** *(Guests)* / **Dashboard** *(Hosts)* - Host management
+  - **Profile** *(Logged-in only)* - User account settings
+  - **Auth Buttons** - Sign In / Logout
+  - **Responsive Mobile Menu** - All navigation options on mobile
 
 ## Getting Started
 
@@ -258,6 +268,28 @@ Run `npm run typecheck` to validate types.
 - `npm run lint` - Lint & format code
 - `npm run format` - Format code
 - `npm run typecheck` - TypeScript validation
+
+## Navigation Guide
+
+The responsive navigation bar adapts based on user authentication and role:
+
+### **Unauthenticated User**
+```
+[Logo] [Search Bar] [Explore] [Sign In]
+```
+
+### **Logged-in Guest**
+```
+[Logo] [Search Bar] [Explore] [Bookings] [Wishlist] [Become a Host] [Profile] [Logout]
+```
+
+### **Logged-in Host**
+```
+[Logo] [Search Bar] [Explore] [Bookings] [Wishlist] [Dashboard] [Profile] [Logout]
+```
+
+### **Mobile View**
+All navigation items collapse into a responsive hamburger menu with the same links optimized for touch interaction.
 
 ## Usage
 
@@ -377,7 +409,14 @@ tripnest/
 │   │   ├── Button.tsx            # Reusable button component
 │   │   ├── Input.tsx             # Form input component
 │   │   ├── Modal.tsx             # Modal dialog component
-│   │   └── NavBar.tsx            # Navigation bar component
+│   │   └── NavBar.tsx            # Navigation bar with responsive menu
+│   │       ├── Logo & Search     # TripNest branding + destination search
+│   │       ├── Explore           # Browse all listings
+│   │       ├── Bookings          # View user bookings (logged-in only)
+│   │       ├── Wishlist          # View saved favorites (logged-in only)
+│   │       ├── Host Actions      # Become a Host (guests) / Dashboard (hosts)
+│   │       ├── Profile           # User account settings (logged-in only)
+│   │       └── Auth              # Sign In / Logout buttons
 │   └── SessionProviderWrapper.tsx # NextAuth session provider wrapper
 ├── lib/                          # Utility functions & configurations
 │   ├── auth.ts                   # JWT token helpers & authentication

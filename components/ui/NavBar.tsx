@@ -185,50 +185,69 @@ export default function NavBar() {
 					</form>
 
 					{/* Navigation Links */}
-					<nav className="hidden md:flex items-center space-x-6">
+				<nav className="hidden md:flex items-center space-x-1">
+					<Link
+						href="/"
+						className="text-gray-700 hover:text-blue-600 transition-colors font-medium px-3 py-2 rounded-md hover:bg-blue-50"
+					>
+						Explore
+					</Link>
+					{user ? (
+						<>
+							<Link
+								href="/bookings"
+								className="text-gray-700 hover:text-blue-600 transition-colors font-medium px-3 py-2 rounded-md hover:bg-blue-50"
+							>
+								Bookings
+							</Link>
+							<Link
+								href="/user/wishlist"
+								className="text-gray-700 hover:text-blue-600 transition-colors font-medium px-3 py-2 rounded-md hover:bg-blue-50"
+							>
+								Wishlist
+							</Link>
+						</>
+					) : null}
+					{user?.role === "host" ? (
 						<Link
-							href="/"
+							href="/host/dashboard"
 							className="text-gray-700 hover:text-blue-600 transition-colors font-medium px-3 py-2 rounded-md hover:bg-blue-50"
 						>
-							Home
+							Dashboard
 						</Link>
-						{user?.role === "host" ? (
+					) : (
+						<Link
+							href="/host/listings/new"
+							className="text-gray-700 hover:text-blue-600 transition-colors font-medium px-3 py-2 rounded-md hover:bg-blue-50"
+						>
+							Become a Host
+						</Link>
+					)}
+					{user ? (
+						<div className="flex items-center space-x-3 border-l border-gray-200 pl-3 ml-1">
 							<Link
-								href="/host/dashboard"
+								href="/user/profile"
 								className="text-gray-700 hover:text-blue-600 transition-colors font-medium px-3 py-2 rounded-md hover:bg-blue-50"
 							>
-								Dashboard
+								Profile
 							</Link>
-						) : (
-							<Link
-								href="/host/listings/new"
-								className="text-gray-700 hover:text-blue-600 transition-colors font-medium px-3 py-2 rounded-md hover:bg-blue-50"
+							<button
+								type="button"
+								onClick={handleLogout}
+								className="text-gray-700 hover:text-blue-600 transition-colors font-medium px-3 py-2 rounded-md hover:bg-blue-50 cursor-pointer"
 							>
-								Become a Host
-							</Link>
-						)}
-						{user ? (
-							<div className="flex items-center space-x-4">
-								<span className="text-gray-700 font-medium">
-									Welcome, {user?.name}
-								</span>
-								<button
-									type="button"
-									onClick={handleLogout}
-									className="text-gray-700 hover:text-blue-600 transition-colors font-medium px-3 py-2 rounded-md hover:bg-blue-50 cursor-pointer"
-								>
-									Sign Out
-								</button>
-							</div>
-						) : (
-							<Link
-								href="/login"
-								className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors font-medium"
-							>
-								Sign In
-							</Link>
-						)}
-					</nav>
+								Logout
+							</button>
+						</div>
+					) : (
+						<Link
+							href="/login"
+							className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors font-medium ml-3"
+						>
+							Sign In
+						</Link>
+					)}
+				</nav>
 
 					{/* Mobile Menu Button */}
 					<div className="md:hidden">
@@ -314,8 +333,27 @@ export default function NavBar() {
 							onClick={closeMobileMenu}
 							className="block text-gray-700 hover:text-blue-600 transition-colors font-medium px-3 py-2 rounded-md hover:bg-blue-50"
 						>
-							Home
+							Explore
 						</Link>
+
+						{user ? (
+							<>
+								<Link
+									href="/bookings"
+									onClick={closeMobileMenu}
+									className="block text-gray-700 hover:text-blue-600 transition-colors font-medium px-3 py-2 rounded-md hover:bg-blue-50"
+								>
+									Bookings
+								</Link>
+								<Link
+									href="/user/wishlist"
+									onClick={closeMobileMenu}
+									className="block text-gray-700 hover:text-blue-600 transition-colors font-medium px-3 py-2 rounded-md hover:bg-blue-50"
+								>
+									Wishlist
+								</Link>
+							</>
+						) : null}
 
 						{user?.role === "host" ? (
 							<Link
@@ -336,10 +374,14 @@ export default function NavBar() {
 						)}
 
 						{user ? (
-							<div className="space-y-2">
-								<div className="px-3 py-2 text-gray-700 font-medium">
-									Welcome, {user?.name}
-								</div>
+							<div className="space-y-2 border-t border-gray-200 pt-4">
+								<Link
+									href="/user/profile"
+									onClick={closeMobileMenu}
+									className="block text-gray-700 hover:text-blue-600 transition-colors font-medium px-3 py-2 rounded-md hover:bg-blue-50"
+								>
+									Profile
+								</Link>
 								<button
 									type="button"
 									onClick={() => {
@@ -348,7 +390,7 @@ export default function NavBar() {
 									}}
 									className="block w-full text-left text-gray-700 hover:text-blue-600 transition-colors font-medium px-3 py-2 rounded-md hover:bg-blue-50 cursor-pointer"
 								>
-									Sign Out
+									Logout
 								</button>
 							</div>
 						) : (
