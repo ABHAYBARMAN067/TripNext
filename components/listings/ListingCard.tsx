@@ -10,8 +10,8 @@ interface Listing {
 	location: {
 		address: string;
 		coordinates: [number, number];
-		
 	};
+
 	images: { url: string; publicId: string }[];
 	amenities: string[];
 	host: string;
@@ -20,6 +20,7 @@ interface Listing {
 	maxGuests?: number;
 	averageRating?: number;
 }
+
 
 export default function ListingCard({ listing }: { listing: Listing }) {
 	const imageUrl = listing.images?.[0]?.url || "/vercel.svg";

@@ -1,12 +1,11 @@
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
-import { FaPlane } from 'react-icons/fa';
+import { motion } from "framer-motion";
+import { FaPlane } from "react-icons/fa";
 
 export default function NotFound() {
 	return (
 		<div className="flex min-h-screen flex-col items-center justify-center overflow-hidden">
-			
 			<div className="relative w-[400px] h-[80px] mb-10">
 				<div className="absolute top-1/2 w-full border-t-2 border-dashed border-gray-300" />
 
@@ -16,7 +15,7 @@ export default function NotFound() {
 					transition={{
 						duration: 5,
 						repeat: Infinity,
-						ease: 'linear',
+						ease: "linear",
 					}}
 				>
 					<FaPlane className="text-4xl text-blue-500 rotate-45" />
@@ -31,3 +30,4 @@ export default function NotFound() {
 		</div>
 	);
 }
+
