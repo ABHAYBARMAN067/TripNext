@@ -2,11 +2,15 @@ import mongoose from "mongoose";
 
 const MONGO_URI = process.env.MONGO_URI || process.env.MONGODB_URI;
 
-if (!MONGO_URI) {
-	throw new Error(
-		"Please define the MONGO_URI or MONGODB_URI environment variable inside .env",
-	);
+function getMongoUriOrThrow() {
+	if (!MONGO_URI) {
+		throw new Error(
+			"MONGO_URI or MONGODB_URI is required. Set it in .env (or GitHub Secrets).",
+		);
+	}
+	return MONGO_URI;
 }
+
 
 /**
  * Reusable Mongoose connection helper.
