@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const MONGO_URI = process.env.MONGO_URI || process.env.MONGODB_URI;
 
-function getMongoUriOrThrow() {
+function _getMongoUriOrThrow() {
 	if (!MONGO_URI) {
 		throw new Error(
 			"MONGO_URI or MONGODB_URI is required. Set it in .env (or GitHub Secrets).",
@@ -11,8 +11,8 @@ function getMongoUriOrThrow() {
 	return MONGO_URI;
 }
 
-
 /**
+
  * Reusable Mongoose connection helper.
  * Ensures we only create a single connection across hot reloads in dev.
  */

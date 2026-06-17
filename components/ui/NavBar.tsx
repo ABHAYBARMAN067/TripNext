@@ -185,69 +185,69 @@ export default function NavBar() {
 					</form>
 
 					{/* Navigation Links */}
-				<nav className="hidden md:flex items-center space-x-1">
-					<Link
-						href="/"
-						className="text-gray-700 hover:text-blue-600 transition-colors font-medium px-3 py-2 rounded-md hover:bg-blue-50"
-					>
-						Explore
-					</Link>
-					{user ? (
-						<>
-							<Link
-								href="/bookings"
-								className="text-gray-700 hover:text-blue-600 transition-colors font-medium px-3 py-2 rounded-md hover:bg-blue-50"
-							>
-								Bookings
-							</Link>
-							<Link
-								href="/user/wishlist"
-								className="text-gray-700 hover:text-blue-600 transition-colors font-medium px-3 py-2 rounded-md hover:bg-blue-50"
-							>
-								Wishlist
-							</Link>
-						</>
-					) : null}
-					{user?.role === "host" ? (
+					<nav className="hidden md:flex items-center space-x-1">
 						<Link
-							href="/host/dashboard"
+							href="/"
 							className="text-gray-700 hover:text-blue-600 transition-colors font-medium px-3 py-2 rounded-md hover:bg-blue-50"
 						>
-							Dashboard
+							Explore
 						</Link>
-					) : (
-						<Link
-							href="/host/listings/new"
-							className="text-gray-700 hover:text-blue-600 transition-colors font-medium px-3 py-2 rounded-md hover:bg-blue-50"
-						>
-							Become a Host
-						</Link>
-					)}
-					{user ? (
-						<div className="flex items-center space-x-3 border-l border-gray-200 pl-3 ml-1">
+						{user ? (
+							<>
+								<Link
+									href="/bookings"
+									className="text-gray-700 hover:text-blue-600 transition-colors font-medium px-3 py-2 rounded-md hover:bg-blue-50"
+								>
+									Bookings
+								</Link>
+								<Link
+									href="/user/wishlist"
+									className="text-gray-700 hover:text-blue-600 transition-colors font-medium px-3 py-2 rounded-md hover:bg-blue-50"
+								>
+									Wishlist
+								</Link>
+							</>
+						) : null}
+						{user?.role === "host" ? (
 							<Link
-								href="/user/profile"
+								href="/host/dashboard"
 								className="text-gray-700 hover:text-blue-600 transition-colors font-medium px-3 py-2 rounded-md hover:bg-blue-50"
 							>
-								Profile
+								Dashboard
 							</Link>
-							<button
-								type="button"
-								onClick={handleLogout}
-								className="text-gray-700 hover:text-blue-600 transition-colors font-medium px-3 py-2 rounded-md hover:bg-blue-50 cursor-pointer"
+						) : (
+							<Link
+								href="/host/listings/new"
+								className="text-gray-700 hover:text-blue-600 transition-colors font-medium px-3 py-2 rounded-md hover:bg-blue-50"
 							>
-								Logout
-							</button>
-						</div>
-					) : (
-						<Link
-							href="/login"
-							className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors font-medium ml-3"
-						>
-							Sign In
-						</Link>
-					)}
-				</nav>
+								Become a Host
+							</Link>
+						)}
+						{user ? (
+							<div className="flex items-center space-x-3 border-l border-gray-200 pl-3 ml-1">
+								<Link
+									href="/user/profile"
+									className="text-gray-700 hover:text-blue-600 transition-colors font-medium px-3 py-2 rounded-md hover:bg-blue-50"
+								>
+									Profile
+								</Link>
+								<button
+									type="button"
+									onClick={handleLogout}
+									className="text-gray-700 hover:text-blue-600 transition-colors font-medium px-3 py-2 rounded-md hover:bg-blue-50 cursor-pointer"
+								>
+									Logout
+								</button>
+							</div>
+						) : (
+							<Link
+								href="/login"
+								className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors font-medium ml-3"
+							>
+								Sign In
+							</Link>
+						)}
+					</nav>
 
 					{/* Mobile Menu Button */}
 					<div className="md:hidden">

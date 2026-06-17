@@ -21,7 +21,6 @@ interface Listing {
 	averageRating?: number;
 }
 
-
 export default function ListingCard({ listing }: { listing: Listing }) {
 	const imageUrl = listing.images?.[0]?.url || "/vercel.svg";
 
