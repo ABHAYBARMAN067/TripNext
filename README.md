@@ -1,6 +1,7 @@
 # 🏠 TripNest
 
 A full-stack, Airbnb-inspired travel listing platform built with **Next.js 16**, featuring secure authentication, property listings, booking management, reviews, and interactive maps.
+
 ## Project Screenshot
 
 ![TripNest Screenshot](public/screenshot.png)
@@ -269,253 +270,72 @@ Run `npm run typecheck` to validate types.
 - `npm run format` - Format code
 - `npm run typecheck` - TypeScript validation
 
-## Navigation Guide
-
-The responsive navigation bar adapts based on user authentication and role:
-
-### **Unauthenticated User**
-```
-[Logo] [Search Bar] [Explore] [Sign In]
-```
-
-### **Logged-in Guest**
-```
-[Logo] [Search Bar] [Explore] [Bookings] [Wishlist] [Become a Host] [Profile] [Logout]
-```
-
-### **Logged-in Host**
-```
-[Logo] [Search Bar] [Explore] [Bookings] [Wishlist] [Dashboard] [Profile] [Logout]
-```
-
-### **Mobile View**
-All navigation items collapse into a responsive hamburger menu with the same links optimized for touch interaction.
-
 ## Usage
 
-### For Guests
-1. Register/Login as guest
-2. Browse & filter listings
-3. View property details with maps/reviews
-4. Make bookings with calendar
-5. Leave reviews, manage bookings
+### Guest Users
 
-### For Hosts
-1. Register/Login as host
-2. Create/manage listings with photos
-3. Confirm/cancel guest bookings
-4. View dashboard analytics (total listings, bookings, revenue, average rating)
-5. Manage booking status (pending, confirmed, cancelled)
-6. View recent bookings and statistics
+* Register or log in
+* Search and explore properties
+* View listing details, maps, and reviews
+* Make and manage bookings
+* Add listings to wishlist
+* Leave reviews and ratings
+
+### Host Users
+
+* Create and manage property listings
+* Upload listing images
+* Manage guest bookings
+* View host dashboard and analytics
+* Track revenue and booking statistics
+
+---
 
 ## Project Structure
 
-```
+```text
 tripnest/
-├── app/                          # Next.js App Router
-│   ├── (auth)/                   # Authentication pages (login/register)
-│   │   ├── login/
-│   │   │   └── page.tsx          # Login page
-│   │   └── register/
-│   │       └── page.tsx          # Registration page
-│   ├── api/                      # Backend API routes
-│   │   ├── auth/                 # Authentication endpoints
-│   │   │   ├── [...nextauth]/
-│   │   │   │   └── route.ts      # NextAuth.js configuration
-│   │   │   ├── login/
-│   │   │   │   └── route.ts      # User login API
-│   │   │   ├── logout/
-│   │   │   │   └── route.ts      # User logout API
-│   │   │   ├── register/
-│   │   │   │   └── route.ts      # User registration API
-│   │   │   ├── status/
-│   │   │   │   └── route.ts      # Authentication status API
-│   │   │   └── verify-otp/
-│   │   │       └── route.ts      # OTP verification API
-│   │   ├── bookings/             # Booking management APIs
-│   │   │   ├── route.ts          # Booking list API
-│   │   │   └── [id]/
-│   │   │       └── route.ts      # Individual booking operations
-│   │   ├── geocode/
-│   │   │   └── route.ts          # Address geocoding API
-│   │   ├── host/                 # Host-specific APIs
-│   │   │   ├── bookings/
-│   │   │   │   └── route.ts      # Host booking management
-│   │   │   ├── listings/
-│   │   │   │   └── route.ts      # Host listing management
-│   │   │   └── stats/
-│   │   │       └── route.ts      # Host dashboard statistics
-│   │   ├── listings/             # Property listing APIs
-│   │   │   ├── route.ts          # Listing list API
-│   │   │   └── [id]/
-│   │   │       └── route.ts      # Individual listing operations
-│   │   ├── reviews/              # Review system APIs
-│   │   │   ├── route.ts          # Review list API
-│   │   │   └── [id]/
-│   │   │       └── route.ts      # Individual review operations
-│   │   ├── upload/
-│   │   │   └── route.ts          # Image upload API
-│   │   └── user/                 # User-specific APIs
-│   │       ├── profile/
-│   │       │   └── route.ts      # User profile management
-│   │       ├── recently-viewed/
-│   │       │   └── route.ts      # Recently viewed listings
-│   │       └── saved-searches/   # Saved search filters
-│   │           └── [id]/
-│   │               └── route.ts   # Individual saved search operations
-│   ├── bookings/
-│   │   └── page.tsx              # Guest booking pages
-│   ├── host/                     # Host dashboard pages
-│   │   ├── bookings/
-│   │   │   └── page.tsx          # Host booking confirmations
-│   │   ├── dashboard/
-│   │   │   └── page.tsx          # Host dashboard with stats
-│   │   └── listings/             # Host listing management
-│   │       ├── [id]/
-│   │       │   ├── edit/
-│   │       │   │   └── page.jsx  # Edit listing page
-│   │       │   └── page.jsx      # Individual listing pages
-│   │       ├── new/
-│   │       │   └── page.tsx      # Create new listing page
-│   │       └── page.tsx          # Host listings overview
-│   ├── listings/                 # Public listing pages (redirects to home)
-│   │   └── page.tsx              # Redirect to home page
-│   ├── globals.css               # Global CSS styles
-│   ├── layout.tsx                # Root layout with providers
-│   ├── not-found.tsx             # 404 error page
-│   └── page.tsx                  # Home page (listing grid)
-├── components/                   # Reusable React components
-│   ├── auth/                     # Authentication components
-│   │   ├── LoginForm.tsx         # Login form component
-│   │   └── RegisterForm.tsx      # Registration form component
-│   ├── bookings/                 # Booking-related components
-│   │   ├── BookingForm.tsx       # Booking creation form
-│   │   └── BookingList.tsx       # Booking list display
-│   ├── host/                     # Host-specific components
-│   │   ├── HostDashboard.tsx     # Host dashboard component
-│   │   └── HostListings.tsx      # Host listings management
-│   ├── listings/                 # Listing display components
-│   │   ├── ListingCard.tsx       # Individual listing card
-│   │   ├── ListingDetail.tsx     # Detailed listing view
-│   │   ├── ListingGrid.tsx       # Grid layout for listings
-│   │   └── ListingsPageClient.tsx # Client component for listings page
-│   ├── maps/                     # Interactive map components
-│   │   ├── Map.jsx               # Leaflet map component
-│   │   └── Map.tsx               # TypeScript version of map component
-│   ├── reviews/                  # Review system components
-│   │   ├── ReviewCard.tsx        # Individual review display
-│   │   └── ReviewList.tsx        # List of reviews
-│   ├── ui/                       # UI primitive components
-│   │   ├── Button.tsx            # Reusable button component
-│   │   ├── Input.tsx             # Form input component
-│   │   ├── Modal.tsx             # Modal dialog component
-│   │   └── NavBar.tsx            # Navigation bar with responsive menu
-│   │       ├── Logo & Search     # TripNest branding + destination search
-│   │       ├── Explore           # Browse all listings
-│   │       ├── Bookings          # View user bookings (logged-in only)
-│   │       ├── Wishlist          # View saved favorites (logged-in only)
-│   │       ├── Host Actions      # Become a Host (guests) / Dashboard (hosts)
-│   │       ├── Profile           # User account settings (logged-in only)
-│   │       └── Auth              # Sign In / Logout buttons
-│   └── SessionProviderWrapper.tsx # NextAuth session provider wrapper
-├── lib/                          # Utility functions & configurations
-│   ├── auth.ts                   # JWT token helpers & authentication
-│   ├── auth-config.ts            # NextAuth.js configuration
-│   ├── db.ts                     # MongoDB connection & caching
-│   ├── email.ts                  # Email service with OTP functionality
-│   ├── mongodb.ts                # MongoDB client promise for NextAuth
-│   └── roles.ts                  # Role-based access helpers
-├── models/                       # MongoDB/Mongoose schemas
-│   ├── Booking.ts                # Booking reservation model
-│   ├── Listing.ts                # Property listing model
-│   ├── Review.ts                 # Review & rating model
-│   └── User.ts                   # User model with authentication
-├── public/                       # Static assets
-├── colorUse.md                   # Color usage documentation
-├── tsconfig.json                 # TypeScript configuration
-├── next-env.d.ts                 # Next.js TypeScript environment declarations
-├── middleware.ts                 # Route protection & role validation
-├── next.config.ts                # Next.js configuration
-├── package.json                  # Dependencies & scripts
-├── postcss.config.cjs            # PostCSS configuration
-├── README.md                     # This file
-└── .gitignore                    # Git ignore rules
+├── app/            # Next.js App Router & API Routes
+├── components/     # Reusable UI components
+├── lib/            # Utilities & configurations
+├── models/         # MongoDB/Mongoose models
+├── public/         # Static assets
+├── middleware.ts   # Route protection
+├── package.json
+└── README.md
 ```
-## API Endpoints
 
-### Authentication
-- `GET/POST /api/auth/[...nextauth]` - NextAuth.js authentication routes (login, logout, session)
-- `POST /api/auth/login` - Custom user login API
-- `POST /api/auth/logout` - Custom user logout API
-- `GET /api/auth/status` - Authentication status check
-- `POST /api/auth/register` - Send OTP for user registration
-- `POST /api/auth/verify-otp` - Verify OTP and complete registration
-
-### User Management
-- `GET /api/user/profile` - Get user profile
-- `PUT /api/user/profile` - Update user profile (name, bio, photo)
-- `DELETE /api/user/saved-searches/[id]` - Delete a saved search
-- `GET /api/user/wishlist` - Get user's favorite listings
-- `POST /api/user/wishlist` - Add listing to wishlist
-- `DELETE /api/user/wishlist/[id]` - Remove listing from wishlist
-- `GET /api/user/recently-viewed` - Get recently viewed listings
-- `POST /api/user/recently-viewed` - Track a viewed listing
-
-### Listings
-- `GET /api/listings` - Get all listings (with advanced filters: location, price, amenities, ratings)
-- `POST /api/listings` - Create new listing (host only)
-- `GET /api/listings/[id]` - Get single listing
-- `PUT /api/listings/[id]` - Update listing (host only)
-- `DELETE /api/listings/[id]` - Delete listing (host only)
-
-### Bookings
-- `GET /api/bookings` - Get user's bookings
-- `POST /api/bookings` - Create booking
-- `PUT /api/bookings/[id]` - Update booking status
-- `DELETE /api/bookings/[id]` - Cancel booking
-
-### Reviews
-- `POST /api/reviews` - Create review
-- `DELETE /api/reviews/[id]` - Delete review
-
-### Host Endpoints
-- `GET /api/host/stats` - Host dashboard statistics
-- `GET /api/host/listings` - Host's listings
-- `GET /api/host/bookings` - Host's bookings
-
-### Utilities
-- `POST /api/upload` - Image upload to Cloudinary
-- `GET /api/geocode` - Address geocoding
-
+---
 
 ## Authentication & Security
 
-- **JWT Tokens**: Stored securely in HTTP-only cookies
-- **Password Hashing**: bcrypt with salt rounds
-- **Role-Based Access**: Guest and Host permissions
-- **Route Protection**: Middleware validates authentication and roles
-- **Input Validation**: Client and server-side validation
+* Secure authentication with NextAuth.js
+* JWT-based session management
+* Password hashing using bcryptjs
+* Role-based access control (Guest & Host)
+* Protected routes with middleware
+* Email OTP verification
+
+---
 
 ## Deployment
 
-### Vercel (Recommended)
-1. Push to GitHub
-2. Connect Vercel to repo
-3. Add production env vars
+### Vercel
+
+1. Push the repository to GitHub
+2. Import the project into Vercel
+3. Configure environment variables
 4. Deploy
 
-### Other Platforms
-- Railway, Render, AWS, Heroku with similar setup
+---
 
 ## Contributing
 
-1. Fork repository
-2. Create feature branch
-3. Make changes, test thoroughly
-4. Submit pull request
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Open a Pull Request
 
-## License
+---
 
-**Proprietary Software** © 2025  ( https://github.com/ABHAYBARMAN067/TripNext )  All rights reserved.
 
-**Happy coding! ** Built with Next.js, MongoDB, and modern web technologies.
